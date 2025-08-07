@@ -4,11 +4,29 @@ export default function RosterBoard() {
   const [rosters, setRosters] = useState([]);
 
   useEffect(() => {
-    fetch("https://qums3xo3mg.execute-api.us-east-2.amazonaws.com/prod/rosters")
+    fetch(
+      "https://qums3xo3mg.execute-api.us-east-2.amazonaws.com/prod/rosters"
+    )
       .then((res) => res.json())
       .then((data) => setRosters(data))
       .catch((err) => console.error("Error fetching rosters:", err));
   }, []);
+
+  // Exact Sleeper badge colors for contract years
+  const getContractBadgeColor = (length) => {
+    switch (length) {
+      case 1:
+        return "bg-[#F44336] text-white"; // Red
+      case 2:
+        return "bg-[#FF9800] text-white"; // Orange
+      case 3:
+        return "bg-[#FFEB3B] text-black"; // Yellow
+      case 4:
+        return "bg-[#4CAF50] text-white"; // Green
+      default:
+        return "bg-gray-500 text-white"; // Fallback
+    }
+  };
 
   return (
     <>
@@ -106,8 +124,19 @@ export default function RosterBoard() {
                 <ul style={{ paddingLeft: "1.25rem", color: "#cccccc" }}>
                   {team.players && team.players.length > 0 ? (
                     team.players.map((player) => (
-                      <li key={player.player_id}>
-                        {player.full_name} ({player.position})
+                      <li key={player.player_id} className="flex items-center gap-2">
+                        <span>
+                          {player.full_name} ({player.position} - {player.team})
+                        </span>
+                        <span
+                          className={`px-2 py-0.5 rounded-full text-xs font-semibold ${getContractBadgeColor(
+                            player.contract_length
+                          )}`}
+                        >
+                          {player.contract_length
+                            ? `${player.contract_length} yr`
+                            : "N/A"}
+                        </span>
                       </li>
                     ))
                   ) : (
