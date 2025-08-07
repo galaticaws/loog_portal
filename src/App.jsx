@@ -13,21 +13,32 @@ export default function RosterBoard() {
   }, []);
 
   // Exact Sleeper badge colors for contract years
-const getContractBadgeStyle = (length) => {
-  switch (length) {
-    case 1:
-      return { backgroundColor: "#F44336", color: "white" }; // Red
-    case 2:
-      return { backgroundColor: "#FF9800", color: "white" }; // Orange
-    case 3:
-      return { backgroundColor: "#FFEB3B", color: "black" }; // Yellow
-    case 4:
-      return { backgroundColor: "#4CAF50", color: "white" }; // Green
-    default:
-      return { backgroundColor: "#6B7280", color: "white" }; // Gray fallback
-  }
-};
+  const getContractBadgeStyle = (length) => {
+    const base = {
+      padding: "2px 8px",
+      borderRadius: "9999px",
+      fontSize: "12px",
+      fontWeight: "600",
+      display: "inline-block",
+      minWidth: "36px",
+      textAlign: "center",
+      boxShadow: "inset 0 1px 0 rgba(0,0,0,0.15)",
+      userSelect: "none",
+    };
 
+    switch (length) {
+      case 1:
+        return { ...base, backgroundColor: "#F44336", color: "white" }; // Red
+      case 2:
+        return { ...base, backgroundColor: "#FF9800", color: "white" }; // Orange
+      case 3:
+        return { ...base, backgroundColor: "#FFEB3B", color: "black" }; // Yellow
+      case 4:
+        return { ...base, backgroundColor: "#4CAF50", color: "white" }; // Green
+      default:
+        return { ...base, backgroundColor: "#6B7280", color: "white" }; // Gray fallback
+    }
+  };
 
   return (
     <>
@@ -122,19 +133,31 @@ const getContractBadgeStyle = (length) => {
                 >
                   {team.owner_name || "Unnamed Team"}
                 </h2>
-                <ul style={{ paddingLeft: "1.25rem", color: "#cccccc" }}>
+                <ul
+                  style={{
+                    paddingLeft: "1.25rem",
+                    color: "#cccccc",
+                    margin: 0,
+                    listStyle: "none",
+                  }}
+                >
                   {team.players && team.players.length > 0 ? (
                     team.players.map((player) => (
-                      <li key={player.player_id} className="flex items-center gap-2">
+                      <li
+                        key={player.player_id}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.5rem",
+                          marginBottom: "0.5rem",
+                        }}
+                      >
                         <span>
                           {player.full_name} ({player.position} - {player.team})
                         </span>
-                        <span
-                            style={getContractBadgeStyle(player.contract_length)}
-                            className="px-2 py-0.5 rounded-full text-xs font-semibold"
-                          >
-                            {player.contract_length ? `${player.contract_length} yr` : "N/A"}
-                          </span>
+                        <span style={getContractBadgeStyle(player.contract_length)}>
+                          {player.contract_length ? `${player.contract_length} yr` : "N/A"}
+                        </span>
                       </li>
                     ))
                   ) : (
