@@ -11,92 +11,140 @@ export default function RosterBoard() {
   }, []);
 
   return (
-    <div
-      style={{
-        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-        backgroundColor: "#1E1F24",
-        color: "#ffffff",
-        minHeight: "100vh",
-        padding: "2rem 1rem",
-      }}
-    >
-      <h1
+    <>
+      {/* Google Fonts import */}
+      <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+        rel="stylesheet"
+      />
+
+      <div
         style={{
-          fontSize: "3rem",
-          textAlign: "center",
-          marginBottom: "2rem",
-          animation: "float 4s ease-in-out infinite",
-          color: "#7289DA",
+          fontFamily: "'Inter', sans-serif",
+          background: "linear-gradient(to right, #1e1f21, #5f4b8b)",
+          color: "#ffffff",
+          minHeight: "100vh",
+          width: "100vw",
+          padding: "2rem 1rem",
+          boxSizing: "border-box",
+          overflowX: "hidden",
         }}
       >
-        League of Ordinary Gentlemen Rosters 🏈
-      </h1>
-
-      {rosters.length === 0 ? (
-        <p style={{ textAlign: "center", color: "#ccc" }}>Loading rosters...</p>
-      ) : (
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: "1.5rem",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "0.75rem",
+            marginBottom: "2rem",
           }}
         >
-          {rosters.map((team) => (
-            <div
-              key={team.roster_id}
-              style={{
-                backgroundColor: "#292B32",
-                padding: "1rem",
-                borderRadius: "12px",
-                boxShadow: "0 8px 20px rgba(0,0,0,0.3)",
-              }}
-            >
-              <h2
+          <h1
+            style={{
+              fontSize: "2.5rem",
+              textAlign: "center",
+              animation: "float 4s ease-in-out infinite",
+              color: "#7289DA",
+              margin: 0,
+              userSelect: "none",
+            }}
+          >
+            League of Ordinary Gentlemen Rosters
+          </h1>
+          <img
+            src="https://sleepercdn.com/images/v2/logo_color.svg"
+            alt="Sleeper Logo"
+            className="pulse"
+            style={{ height: "40px" }}
+          />
+        </div>
+
+        {rosters.length === 0 ? (
+          <p style={{ textAlign: "center", color: "#ccc" }}>
+            Loading rosters...
+          </p>
+        ) : (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+              gap: "1.5rem",
+              padding: "0 1rem",
+            }}
+          >
+            {rosters.map((team) => (
+              <div
+                key={team.roster_id}
                 style={{
-                  fontSize: "1.25rem",
-                  fontWeight: "600",
-                  marginBottom: "0.75rem",
-                  color: "#ffffff",
+                  backgroundColor: "#292B32",
+                  padding: "1rem",
+                  borderRadius: "12px",
+                  boxShadow: "0 8px 20px rgba(0,0,0,0.3)",
                 }}
               >
-                {team.owner_name || "Unnamed Team"}
-              </h2>
-              <ul style={{ paddingLeft: "1.25rem", color: "#cccccc" }}>
-                {team.players && team.players.length > 0 ? (
-                  team.players.map((player) => (
-                    <li key={player.player_id}>
-                      {player.full_name} ({player.position} - {player.team})
+                <h2
+                  style={{
+                    fontSize: "1.25rem",
+                    fontWeight: "600",
+                    marginBottom: "0.75rem",
+                    color: "#ffffff",
+                  }}
+                >
+                  {team.owner_name || "Unnamed Team"}
+                </h2>
+                <ul style={{ paddingLeft: "1.25rem", color: "#cccccc" }}>
+                  {team.players && team.players.length > 0 ? (
+                    team.players.map((player) => (
+                      <li key={player.player_id}>
+                        {player.full_name} ({player.position} - {player.team})
+                      </li>
+                    ))
+                  ) : (
+                    <li style={{ fontStyle: "italic", opacity: 0.6 }}>
+                      No players
                     </li>
-                  ))
-                ) : (
-                  <li style={{ fontStyle: "italic", opacity: 0.6 }}>
-                    No players
-                  </li>
-                )}
-              </ul>
-            </div>
-          ))}
-        </div>
-      )}
+                  )}
+                </ul>
+              </div>
+            ))}
+          </div>
+        )}
 
-      <footer
-        style={{
-          marginTop: "3rem",
-          textAlign: "center",
-          fontSize: "0.9rem",
-          color: "#aaa",
-        }}
-      >
-        © 2025 – Office of the Commissioner
-      </footer>
+        <footer
+          style={{
+            marginTop: "3rem",
+            textAlign: "center",
+            fontSize: "0.9rem",
+            color: "#aaa",
+          }}
+        >
+          © 2025 – Office of the Commissioner
+        </footer>
 
-      <style>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-8px); }
-        }
-      `}</style>
-    </div>
+        {/* Embedded animations */}
+        <style>{`
+          @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+          }
+
+          @keyframes pulseLogo {
+            0%, 100% {
+              transform: scale(1);
+              opacity: 1;
+            }
+            50% {
+              transform: scale(1.08);
+              opacity: 0.85;
+            }
+          }
+
+          .pulse {
+            animation: pulseLogo 3s ease-in-out infinite;
+            will-change: transform;
+          }
+        `}</style>
+      </div>
+    </>
   );
 }
