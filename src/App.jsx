@@ -11,16 +11,25 @@ export default function RosterBoard() {
   }, []);
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-center">Sleeper Fantasy Rosters</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {rosters.map((team, idx) => (
-          <div key={team.roster_id} className="bg-white shadow-md rounded-2xl p-4">
-            <h2 className="text-xl font-semibold mb-2">{team.owner_name || "Unnamed Team"}</h2>
-            <ul className="text-sm text-gray-700">
+    <div className="min-h-screen bg-gradient-to-br from-blue-500 to-blue-900 text-white py-10 px-4">
+      <h1 className="text-4xl font-bold text-center mb-10 animate-bounce-slow">
+        League of Ordinary Gentlemen Rosters
+      </h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        {rosters.map((team) => (
+          <div
+            key={team.roster_id}
+            className="bg-white text-gray-800 rounded-2xl shadow-lg p-5 transition-transform hover:scale-105"
+          >
+            <h2 className="text-xl font-bold mb-3">
+              {team.owner_name || "Unnamed Team"}
+            </h2>
+            <ul className="space-y-1 text-sm">
               {team.players && team.players.length > 0 ? (
-                team.players.map((playerId) => (
-                  <li key={playerId}>Player ID: {playerId}</li>
+                team.players.map((player) => (
+                  <li key={player.player_id}>
+                    {player.full_name} ({player.position} - {player.team})
+                  </li>
                 ))
               ) : (
                 <li className="italic text-gray-400">No players</li>
@@ -29,6 +38,17 @@ export default function RosterBoard() {
           </div>
         ))}
       </div>
+
+      {/* Tailwind custom animation */}
+      <style>{`
+        @keyframes bounce-slow {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+        .animate-bounce-slow {
+          animation: bounce-slow 3s infinite;
+        }
+      `}</style>
     </div>
   );
 }
