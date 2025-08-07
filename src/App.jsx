@@ -146,18 +146,16 @@ export default function RosterBoard() {
                       <li
                         key={player.player_id}
                         style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "0.5rem",
-                          marginBottom: "0.5rem",
+                          marginBottom: "0.75rem",
                         }}
                       >
-                        <span>
-                          {player.full_name} ({player.position} - {player.team})
-                        </span>
-                        <span style={getContractBadgeStyle(player.contract_length)}>
-                          {player.contract_length ? `${player.contract_length} yr` : "N/A"}
-                        </span>
+                        <div style={{ fontWeight: "600" }}>{player.full_name}</div>
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.9rem", opacity: 0.8 }}>
+                          <span>{player.position} - {player.team}</span>
+                          <span style={getContractBadgeStyle(player.contract_length)}>
+                            {player.contract_length ? `${player.contract_length} yr` : "N/A"}
+                          </span>
+                        </div>
                       </li>
                     ))
                   ) : (
