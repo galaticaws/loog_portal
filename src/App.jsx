@@ -52,7 +52,7 @@ export default function RosterBoard() {
             League of Ordinary Gentlemen Rosters
           </h1>
           <img
-            src="https://sleepercdn.com/images/v2/logo_color.svg"
+            src="https://sleeper.com/_next/image?url=%2Fweb-public%2Fimages%2Flogos%2Flogo-full-horizontal-white.png&w=384&q=75"
             alt="Sleeper Logo"
             className="pulse"
             style={{ height: "40px" }}
