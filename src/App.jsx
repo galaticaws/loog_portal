@@ -4,7 +4,7 @@ export default function RosterBoard() {
   const [rosters, setRosters] = useState([]);
 
   useEffect(() => {
-    fetch("https://your-api-id.execute-api.region.amazonaws.com/rosters")
+    fetch("https://qums3xo3mg.execute-api.us-east-2.amazonaws.com/prod/rosters")
       .then(res => res.json())
       .then(data => setRosters(data))
       .catch(err => console.error("Error fetching rosters:", err));
