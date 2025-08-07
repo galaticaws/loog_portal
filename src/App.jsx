@@ -51,6 +51,17 @@ export default function RosterBoard() {
           >
             League of Ordinary Gentlemen Rosters
           </h1>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "0.75rem",
+            marginBottom: "2rem",
+          }}
+        >
           <img
             src="https://sleeper.com/_next/image?url=%2Fweb-public%2Fimages%2Flogos%2Flogo-full-horizontal-white.png&w=384&q=75"
             alt="Sleeper Logo"
@@ -96,7 +107,7 @@ export default function RosterBoard() {
                   {team.players && team.players.length > 0 ? (
                     team.players.map((player) => (
                       <li key={player.player_id}>
-                        {player.full_name} ({player.position} - {player.team})
+                        {player.full_name} ({player.position})
                       </li>
                     ))
                   ) : (
