@@ -13,20 +13,21 @@ export default function RosterBoard() {
   }, []);
 
   // Exact Sleeper badge colors for contract years
-  const getContractBadgeColor = (length) => {
-    switch (length) {
-      case 1:
-        return "bg-[#F44336] text-white"; // Red
-      case 2:
-        return "bg-[#FF9800] text-white"; // Orange
-      case 3:
-        return "bg-[#FFEB3B] text-black"; // Yellow
-      case 4:
-        return "bg-[#4CAF50] text-white"; // Green
-      default:
-        return "bg-gray-500 text-white"; // Fallback
-    }
-  };
+const getContractBadgeStyle = (length) => {
+  switch (length) {
+    case 1:
+      return { backgroundColor: "#F44336", color: "white" }; // Red
+    case 2:
+      return { backgroundColor: "#FF9800", color: "white" }; // Orange
+    case 3:
+      return { backgroundColor: "#FFEB3B", color: "black" }; // Yellow
+    case 4:
+      return { backgroundColor: "#4CAF50", color: "white" }; // Green
+    default:
+      return { backgroundColor: "#6B7280", color: "white" }; // Gray fallback
+  }
+};
+
 
   return (
     <>
@@ -129,14 +130,11 @@ export default function RosterBoard() {
                           {player.full_name} ({player.position} - {player.team})
                         </span>
                         <span
-                          className={`px-2 py-0.5 rounded-full text-xs font-semibold ${getContractBadgeColor(
-                            player.contract_length
-                          )}`}
-                        >
-                          {player.contract_length
-                            ? `${player.contract_length} yr`
-                            : "N/A"}
-                        </span>
+                            style={getContractBadgeStyle(player.contract_length)}
+                            className="px-2 py-0.5 rounded-full text-xs font-semibold"
+                          >
+                            {player.contract_length ? `${player.contract_length} yr` : "N/A"}
+                          </span>
                       </li>
                     ))
                   ) : (
