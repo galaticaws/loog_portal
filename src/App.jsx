@@ -1,39 +1,81 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 export default function RosterBoard() {
   const [rosters, setRosters] = useState([]);
 
   useEffect(() => {
-    fetch("https://qums3xo3mg.execute-api.us-east-2.amazonaws.com/prod/rosters")
-      .then(res => res.json())
-      .then(data => setRosters(data))
-      .catch(err => console.error("Error fetching rosters:", err));
+    fetch(
+      "https://qums3xo3mg.execute-api.us-east-2.amazonaws.com/prod/rosters"
+    )
+      .then((res) => res.json())
+      .then((data) => setRosters(data))
+      .catch((err) => console.error("Error fetching rosters:", err));
   }, []);
 
   return (
     <div
-      className="min-h-screen flex flex-col justify-between text-white py-10 px-4"
       style={{
-        background: 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)',
+        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+        background: "linear-gradient(135deg, #89f7fe, #66a6ff)",
+        color: "#fff",
+        height: "100vh",
+        margin: 0,
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+        padding: "1rem",
       }}
     >
-      <header>
-        <h1 className="text-4xl font-bold text-center mb-10 animate-bounce-slow">
-          League of Ordinary Gentlemen Rosters <span role="img" aria-label="football">🏈</span>
-        </h1>
-      </header>
+      <h1
+        style={{
+          fontSize: "3.5rem",
+          marginBottom: "0.5rem",
+          animation: "float 4s ease-in-out infinite",
+          userSelect: "none",
+        }}
+      >
+        League of Ordinary Gentlemen Rosters <span role="img" aria-label="football">🏈</span>
+      </h1>
 
-      <main className="flex-grow">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {rosters.map((team) => (
+      <div
+        style={{
+          maxHeight: "50vh",
+          overflowY: "auto",
+          width: "100%",
+          maxWidth: "600px",
+          backgroundColor: "rgba(255, 255, 255, 0.15)",
+          borderRadius: "12px",
+          padding: "1rem",
+          color: "rgba(255, 255, 255, 0.9)",
+          textAlign: "left",
+          boxShadow: "0 8px 32px 0 rgba(0,0,0,0.2)",
+        }}
+      >
+        {rosters.length === 0 ? (
+          <p>Loading rosters...</p>
+        ) : (
+          rosters.map((team) => (
             <div
               key={team.roster_id}
-              className="bg-white text-gray-800 rounded-2xl shadow-lg p-5 transition-transform hover:scale-105"
+              style={{
+                marginBottom: "1.5rem",
+                borderBottom: "1px solid rgba(255,255,255,0.3)",
+                paddingBottom: "1rem",
+              }}
             >
-              <h2 className="text-xl font-bold mb-3">
+              <h2
+                style={{
+                  fontWeight: "700",
+                  fontSize: "1.25rem",
+                  marginBottom: "0.5rem",
+                }}
+              >
                 {team.owner_name || "Unnamed Team"}
               </h2>
-              <ul className="space-y-1 text-sm">
+              <ul style={{ marginLeft: "1rem", listStyleType: "disc" }}>
                 {team.players && team.players.length > 0 ? (
                   team.players.map((player) => (
                     <li key={player.player_id}>
@@ -41,26 +83,32 @@ export default function RosterBoard() {
                     </li>
                   ))
                 ) : (
-                  <li className="italic text-gray-400">No players</li>
+                  <li style={{ fontStyle: "italic", opacity: 0.7 }}>
+                    No players
+                  </li>
                 )}
               </ul>
             </div>
-          ))}
-        </div>
-      </main>
+          ))
+        )}
+      </div>
 
-      <footer className="text-center text-sm text-white mt-10">
-        &copy; 2025 - Office of the Commissioner
-      </footer>
+      <div
+        className="footer"
+        style={{
+          marginTop: "2rem",
+          fontSize: "0.9rem",
+          color: "rgba(255, 255, 255, 0.85)",
+          userSelect: "none",
+        }}
+      >
+        <span>&#169;</span> 2025 - Office of the Commissioner
+      </div>
 
-      {/* Custom animation for bouncing title */}
       <style>{`
-        @keyframes bounce-slow {
+        @keyframes float {
           0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-10px); }
-        }
-        .animate-bounce-slow {
-          animation: bounce-slow 3s infinite;
+          50% { transform: translateY(-8px); }
         }
       `}</style>
     </div>
