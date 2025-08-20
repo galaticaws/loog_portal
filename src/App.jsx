@@ -22,6 +22,10 @@ function Countdown({ targetDate, title }) {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
   useEffect(() => {
+
+    // 👇 This sets the browser tab title
+    document.title = "League of Ordinary Gentlemen";
+    
     const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
