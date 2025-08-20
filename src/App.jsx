@@ -1,5 +1,76 @@
 import React, { useEffect, useState } from "react";
 
+function Countdown({ targetDate, title }) {
+  const calculateTimeLeft = () => {
+    const difference = +new Date(targetDate) - +new Date();
+    let timeLeft = {};
+
+    if (difference > 0) {
+      timeLeft = {
+        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((difference / 1000 / 60) % 60),
+        seconds: Math.floor((difference / 1000) % 60),
+      };
+    } else {
+      timeLeft = { expired: true };
+    }
+
+    return timeLeft;
+  };
+
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [targetDate]);
+
+  return (
+    <div
+      style={{
+        backgroundColor: "#292B32",
+        padding: "1rem",
+        borderRadius: "12px",
+        boxShadow: "0 6px 16px rgba(0,0,0,0.25)",
+        minWidth: "250px",
+        textAlign: "center",
+      }}
+    >
+      <h3
+        style={{
+          margin: "0 0 0.5rem 0",
+          fontSize: "1.1rem",
+          fontWeight: "600",
+          color: "#fff",
+        }}
+      >
+        {title}
+      </h3>
+      {timeLeft.expired ? (
+        <div style={{ fontSize: "1rem", color: "#F44336" }}>Expired</div>
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "0.75rem",
+            fontWeight: "600",
+            fontSize: "1.1rem",
+          }}
+        >
+          <span>{timeLeft.days}d</span>
+          <span>{timeLeft.hours}h</span>
+          <span>{timeLeft.minutes}m</span>
+          <span>{timeLeft.seconds}s</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function RosterBoard() {
   const [rosters, setRosters] = useState([]);
 
@@ -12,7 +83,7 @@ export default function RosterBoard() {
       .catch((err) => console.error("Error fetching rosters:", err));
   }, []);
 
-  // Exact Sleeper badge colors for contract years
+  // Sleeper badge colors
   const getContractBadgeStyle = (length) => {
     const base = {
       padding: "2px 8px",
@@ -28,21 +99,38 @@ export default function RosterBoard() {
 
     switch (length) {
       case 1:
-        return { ...base, backgroundColor: "#F44336", color: "white" }; // Red
+        return { ...base, backgroundColor: "#F44336", color: "white" };
       case 2:
-        return { ...base, backgroundColor: "#FF9800", color: "white" }; // Orange
+        return { ...base, backgroundColor: "#FF9800", color: "white" };
       case 3:
-        return { ...base, backgroundColor: "#FFEB3B", color: "black" }; // Yellow
+        return { ...base, backgroundColor: "#FFEB3B", color: "black" };
       case 4:
-        return { ...base, backgroundColor: "#4CAF50", color: "white" }; // Green
+        return { ...base, backgroundColor: "#4CAF50", color: "white" };
       default:
-        return { ...base, backgroundColor: "#6B7280", color: "white" }; // Gray fallback
+        return { ...base, backgroundColor: "#6B7280", color: "white" };
     }
   };
 
+  // Ticker messages
+  const tickerMessages = [
+    "🚨 Draft 8/23/25 8PM EST",
+    "🏆 Contract Selections Due by Midnight EST 8/31/25",
+    "Draft Order: 1. @Jalto • 2. @davemc410 • 3. @2and5 • 4. @Beresky • 5. @millievanilly • 6. @BWheezy87",
+    "7. @joeyjoejoejr19 • 8. @neffneffneff • 9. @mosschamp10 • 10. @Kerplunk13 • 11. @MagnumPower • 12. @mjs1985"
+  ];
+  const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentMessageIndex(
+        (prev) => (prev + 1) % tickerMessages.length
+      );
+    }, 4000); // 4 seconds per message
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <>
-      {/* Google Fonts import */}
       <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
         rel="stylesheet"
@@ -60,13 +148,14 @@ export default function RosterBoard() {
           overflowX: "hidden",
         }}
       >
+        {/* Title */}
         <div
           style={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
             gap: "0.75rem",
-            marginBottom: "2rem",
+            marginBottom: "1rem",
           }}
         >
           <h1
@@ -79,10 +168,11 @@ export default function RosterBoard() {
               userSelect: "none",
             }}
           >
-            League of Ordinary Gentlemen Rosters
+            League of Ordinary Gentlemen
           </h1>
         </div>
 
+        {/* Sleeper logo */}
         <div
           style={{
             display: "flex",
@@ -100,6 +190,70 @@ export default function RosterBoard() {
           />
         </div>
 
+        {/* Countdown Section */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "1.5rem",
+            marginBottom: "2rem",
+            flexWrap: "wrap",
+          }}
+        >
+          <Countdown
+            targetDate="2025-08-23T20:00:00"
+            title="2025 League Draft"
+          />
+          <Countdown
+            targetDate="2025-08-30T00:00:00"
+            title="Contract Signing Period Ends"
+          />
+        </div>
+
+        {/* Sleeper-themed Ticker */}
+        <div
+          style={{
+            backgroundColor: "rgba(0,0,0,0.3)",
+            padding: "0.75rem 1rem",
+            borderRadius: "8px",
+            marginBottom: "2rem",
+            textAlign: "center",
+            minHeight: "2rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#FFEB3B",
+            fontWeight: 600,
+            fontSize: "1rem",
+          }}
+        >
+          <span
+            key={currentMessageIndex}
+            style={{
+              opacity: 0,
+              animation: "fade 4s linear",
+              animationFillMode: "forwards",
+            }}
+          >
+            {tickerMessages[currentMessageIndex]}
+          </span>
+        </div>
+
+        <h1
+          style={{
+            fontSize: "1.5rem",
+            textAlign: "center",
+            animation: "float 4s ease-in-out infinite",
+            color: "#7289DA",
+            margin: 0,
+            userSelect: "none",
+          }}
+        >
+          Rosters and Contracts
+        </h1>
+        <br />
+
+        {/* Rosters */}
         {rosters.length === 0 ? (
           <p style={{ textAlign: "center", color: "#ccc" }}>
             Loading rosters...
@@ -149,11 +303,27 @@ export default function RosterBoard() {
                           marginBottom: "0.75rem",
                         }}
                       >
-                        <div style={{ fontWeight: "600" }}>{player.full_name}</div>
-                        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.9rem", opacity: 0.8 }}>
-                          <span>{player.position} - {player.team}</span>
-                          <span style={getContractBadgeStyle(player.contract_length)}>
-                            {player.contract_length ? `${player.contract_length} yr` : "N/A"}
+                        <div style={{ fontWeight: "600" }}>
+                          {player.full_name}
+                        </div>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "0.5rem",
+                            fontSize: "0.9rem",
+                            opacity: 0.8,
+                          }}
+                        >
+                          <span>
+                            {player.position} - {player.team}
+                          </span>
+                          <span
+                            style={getContractBadgeStyle(player.contract_length)}
+                          >
+                            {player.contract_length
+                              ? `${player.contract_length} yr`
+                              : "N/A"}
                           </span>
                         </div>
                       </li>
@@ -169,6 +339,7 @@ export default function RosterBoard() {
           </div>
         )}
 
+        {/* Footer */}
         <footer
           style={{
             marginTop: "3rem",
@@ -180,7 +351,7 @@ export default function RosterBoard() {
           © 2025 – Office of the Commissioner
         </footer>
 
-        {/* Embedded animations */}
+        {/* Animations */}
         <style>{`
           @keyframes float {
             0%, 100% { transform: translateY(0); }
@@ -188,14 +359,15 @@ export default function RosterBoard() {
           }
 
           @keyframes pulseLogo {
-            0%, 100% {
-              transform: scale(1);
-              opacity: 1;
-            }
-            50% {
-              transform: scale(1.08);
-              opacity: 0.85;
-            }
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.08); opacity: 0.85; }
+          }
+
+          @keyframes fade {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; }
           }
 
           .pulse {
