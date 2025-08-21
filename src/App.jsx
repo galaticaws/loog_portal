@@ -175,7 +175,7 @@ export default function RosterBoard() {
         )}
 
         {/* Footer */}
-        <footer style={styles.footer}>© 2025 – Office of the Commissioner</footer>
+        <footer style={styles.footer}>© 2025 – Office of the Commissioner - Rosters update daily at 5am EST</footer>
 
         {/* Animations */}
         <style>{`
