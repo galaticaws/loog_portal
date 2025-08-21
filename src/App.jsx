@@ -72,6 +72,7 @@ export default function RosterBoard() {
     };
 
     const colors = {
+      0: { backgroundColor: "#8c03fc", color: "white" },
       1: { backgroundColor: "#F44336", color: "white" },
       2: { backgroundColor: "#FF9800", color: "white" },
       3: { backgroundColor: "#FFEB3B", color: "black" },
@@ -155,7 +156,11 @@ export default function RosterBoard() {
                         <div style={styles.playerInfo}>
                           <span>{player.position} - {player.team}</span>
                           <span style={getContractBadgeStyle(player.contract_length)}>
-                            {player.contract_length ? `${player.contract_length} yr` : "N/A"}
+                            {player.contract_length === null || player.contract_length === undefined
+                            ? "N/A"
+                            : player.contract_length === 0
+                            ? "FA - 1 yr"
+                            : `${player.contract_length} yr`}
                           </span>
                         </div>
                       </li>
