@@ -85,10 +85,8 @@ export default function RosterBoard() {
   // Ticker messages
   const tickerMessages = useMemo(
     () => [
-      "🚨 Draft 8/23/25 8PM EST",
+      "🚨 Send me contract selections",
       "🏆 Contract Selections Due by Midnight EST 8/31/25",
-      "Draft Order: 1. @Jalto • 2. @davemc410 • 3. @2and5 • 4. @Beresky • 5. @millievanilly • 6. @BWheezy87",
-      "7. @joeyjoejoejr19 • 8. @neffneffneff • 9. @mosschamp10 • 10. @Kerplunk13 • 11. @MagnumPower • 12. @mjs1985",
     ],
     []
   );
@@ -152,7 +150,9 @@ export default function RosterBoard() {
                   {team.players?.length ? (
                     team.players.map((player) => (
                       <li key={player.player_id} style={{ marginBottom: "0.75rem" }}>
-                        <div style={{ fontWeight: "600" }}>{player.full_name}</div>
+                        <div style={{ fontWeight: "600" }}>
+                          {player.full_name === "Unknown" ? "Defense" : player.full_name}
+                        </div>
                         <div style={styles.playerInfo}>
                           <span>{player.position} - {player.team}</span>
                           <span style={getContractBadgeStyle(player.contract_length)}>
