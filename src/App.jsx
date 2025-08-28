@@ -19,11 +19,9 @@ function Countdown({ targetDate, title }) {
 
   useEffect(() => {
     document.title = "League of Ordinary Gentlemen";
-
     const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
-
     return () => clearInterval(timer);
   }, [calculateTimeLeft]);
 
@@ -48,6 +46,8 @@ function Countdown({ targetDate, title }) {
 export default function RosterBoard() {
   const [rosters, setRosters] = useState([]);
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
+  const [sortOption, setSortOption] = useState("position"); // default sort
+  const [filterOwner, setFilterOwner] = useState("All");
 
   // Fetch rosters
   useEffect(() => {
@@ -85,7 +85,7 @@ export default function RosterBoard() {
   // Ticker messages
   const tickerMessages = useMemo(
     () => [
-      "🚨 Send me contract selections",
+      "🚨 Send me contract selections!",
       "🏆 Contract Selections Due by Midnight EST 8/31/25",
     ],
     []
@@ -98,6 +98,33 @@ export default function RosterBoard() {
     }, 4000);
     return () => clearInterval(interval);
   }, [tickerMessages]);
+
+  // Unique owners for filter dropdown
+  const ownerOptions = useMemo(() => {
+    const owners = rosters.map((r) => r.owner_name || "Unnamed Team");
+    return ["All", ...new Set(owners)];
+  }, [rosters]);
+
+  // Apply filter + sort
+  const processedRosters = useMemo(() => {
+    let filtered = [...rosters];
+    if (filterOwner !== "All") {
+      filtered = filtered.filter((team) => (team.owner_name || "Unnamed Team") === filterOwner);
+    }
+
+    return filtered.map((team) => {
+      let players = [...(team.players || [])];
+
+      if (sortOption === "position") {
+        const order = ["QB", "RB", "WR", "TE", "K", "DEF"];
+        players.sort((a, b) => order.indexOf(a.position) - order.indexOf(b.position));
+      } else if (sortOption === "contract_length") {
+        players.sort((a, b) => (b.contract_length || 0) - (a.contract_length || 0));
+      }
+
+      return { ...team, players };
+    });
+  }, [rosters, sortOption, filterOwner]);
 
   return (
     <>
@@ -122,7 +149,6 @@ export default function RosterBoard() {
 
         {/* Countdown Section */}
         <div style={styles.countdownWrapper}>
-          <Countdown targetDate="2025-08-23T20:00:00" title="2025 League Draft" />
           <Countdown targetDate="2025-08-30T00:00:00" title="Contract Signing Period Ends" />
         </div>
 
@@ -136,14 +162,45 @@ export default function RosterBoard() {
           </span>
         </div>
 
-        {/* Rosters */}
-        <h2 style={styles.sectionTitle}>Rosters and Contracts</h2>
+                <h2 style={styles.sectionTitle}>Rosters and Contracts</h2>
 
-        {rosters.length === 0 ? (
-          <p style={{ textAlign: "center", color: "#ccc" }}>Loading rosters...</p>
+        {/* Controls */}
+        <div style={styles.controls}>
+          <label style={styles.label}>
+            Sort by:{" "}
+            <select
+              value={sortOption}
+              onChange={(e) => setSortOption(e.target.value)}
+              style={styles.select}
+            >
+              <option value="position">Position</option>
+              <option value="contract_length">Contract Length</option>
+            </select>
+          </label>
+          <label style={styles.label}>
+            Filter by Team:{" "}
+            <select
+              value={filterOwner}
+              onChange={(e) => setFilterOwner(e.target.value)}
+              style={styles.select}
+            >
+              {ownerOptions.map((o) => (
+                <option key={o} value={o}>
+                  {o}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+
+        {/* Rosters */}
+
+
+        {processedRosters.length === 0 ? (
+          <p style={{ textAlign: "center", color: "#ccc" }}>No matching rosters...</p>
         ) : (
           <div style={styles.rosterGrid}>
-            {rosters.map((team) => (
+            {processedRosters.map((team) => (
               <div key={team.roster_id} style={styles.rosterCard}>
                 <h3 style={styles.rosterOwner}>{team.owner_name || "Unnamed Team"}</h3>
                 <ul style={styles.playerList}>
@@ -157,10 +214,10 @@ export default function RosterBoard() {
                           <span>{player.position} - {player.team}</span>
                           <span style={getContractBadgeStyle(player.contract_length)}>
                             {player.contract_length === null || player.contract_length === undefined
-                            ? "N/A"
-                            : player.contract_length === 0
-                            ? "FA - 1 yr"
-                            : `${player.contract_length} yr`}
+                              ? "N/A"
+                              : player.contract_length === 0
+                              ? "FA - 1 yr"
+                              : `${player.contract_length} yr`}
                           </span>
                         </div>
                       </li>
@@ -175,7 +232,9 @@ export default function RosterBoard() {
         )}
 
         {/* Footer */}
-        <footer style={styles.footer}>© 2025 – Office of the Commissioner - Rosters update daily at 5am EST</footer>
+        <footer style={styles.footer}>
+          © 2025 – Office of the Commissioner - Rosters update daily at 5am EST
+        </footer>
 
         {/* Animations */}
         <style>{`
@@ -247,6 +306,27 @@ const styles = {
     color: "#FFEB3B",
     fontWeight: 600,
     fontSize: "1rem",
+  },
+  controls: {
+    display: "flex",
+    justifyContent: "center",
+    gap: "1rem",
+    marginBottom: "1.5rem",
+    flexWrap: "wrap",
+  },
+  label: {
+    fontWeight: "600",
+    fontSize: "1rem",
+    color: "#fff",
+  },
+  select: {
+    marginLeft: "0.5rem",
+    padding: "0.3rem 0.5rem",
+    borderRadius: "8px",
+    background: "#292B32",
+    color: "#fff",
+    border: "1px solid #555",
+    fontSize: "0.9rem",
   },
   sectionTitle: {
     fontSize: "1.5rem",
