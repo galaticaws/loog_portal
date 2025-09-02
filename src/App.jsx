@@ -147,12 +147,12 @@ export default function RosterBoard() {
           />
         </div>
 
-        {/* Countdown Section */}
+        {/* Countdown Section 
         <div style={styles.countdownWrapper}>
           <Countdown targetDate="2025-08-30T00:00:00" title="Contract Signing Period Ends" />
-        </div>
+        </div>*/}
 
-        {/* Ticker */}
+        {/* Ticker 
         <div style={styles.ticker}>
           <span
             key={currentMessageIndex}
@@ -160,7 +160,7 @@ export default function RosterBoard() {
           >
             {tickerMessages[currentMessageIndex]}
           </span>
-        </div>
+        </div>*/}
 
                 <h2 style={styles.sectionTitle}>Rosters and Contracts</h2>
 
