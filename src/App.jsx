@@ -49,6 +49,8 @@ export default function RosterBoard() {
   const [sortOption, setSortOption] = useState("position"); // default sort
   const [filterOwner, setFilterOwner] = useState("All");
   const [filterContract, setFilterContract] = useState("All");
+  const [showRfaModal, setShowRfaModal] = useState(false); //violations
+
 
 
   // Fetch rosters
@@ -219,6 +221,21 @@ export default function RosterBoard() {
 
         <center><p>* Restricted FAs are FAs aquired during the season or players activated from the taxi squad. Teams will have an opportunity to give these players a contract before they become FAs.</p></center>
 
+
+              <div
+        style={{
+          textAlign: "center",
+          marginTop: "1rem",
+          marginBottom: "1rem",
+          cursor: "pointer",
+          color: "#bf0d0d",
+          fontWeight: 600,
+        }}
+        onClick={() => setShowRfaModal(true)}
+      >
+        🚨 Contract Violations 🚨
+      </div>
+
         {/* Rosters */}
 
 
@@ -282,6 +299,26 @@ export default function RosterBoard() {
             animation: pulseLogo 3s ease-in-out infinite;
           }
         `}</style>
+
+        {showRfaModal && (
+  <div style={styles.modalOverlay} onClick={() => setShowRfaModal(false)}>
+    <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
+      <h2 style={styles.modalTitle}>🚨 Contract Violations 🚨</h2>
+      <p style={styles.modalText}>
+        <b>Transaction ID:1284519691963891712</b><br></br>
+        <b>Date:</b> 10/17/2025<br></br>
+        <b>Player:</b> Kyle Williams (WR) <b>Contract Length:</b> 2 yr<br></br>
+        <b>Team:</b> millievanilly<br></br>
+        <b>Penatly:</b> 2026 4th Round Rookie Pick<br></br>
+      </p>
+
+      <button style={styles.modalButton} onClick={() => setShowRfaModal(false)}>
+        Close
+      </button>
+    </div>
+  </div>
+)}
+
       </div>
     </>
   );
@@ -424,4 +461,54 @@ const styles = {
     fontWeight: "600",
     fontSize: "1.1rem",
   },
+  modalOverlay: {
+  position: "fixed",
+  top: 0,
+  left: 0,
+  width: "100vw",
+  height: "100vh",
+  backgroundColor: "rgba(0,0,0,0.7)",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  zIndex: 9999,
+},
+
+modal: {
+  backgroundColor: "#292B32",
+  padding: "2rem",
+  borderRadius: "12px",
+  maxWidth: "480px",
+  width: "90%",
+  color: "#fff",
+  boxShadow: "0 8px 20px rgba(0,0,0,0.4)",
+  animation: "float 4s ease-in-out infinite",
+},
+
+modalTitle: {
+  marginTop: 0,
+  marginBottom: "1rem",
+  fontSize: "1.4rem",
+  color: "#7289DA",
+  fontWeight: "700",
+},
+
+modalText: {
+  fontSize: "1rem",
+  lineHeight: 1.5,
+  marginBottom: "1.5rem",
+  color: "#ddd",
+},
+
+modalButton: {
+  padding: "0.5rem 1rem",
+  backgroundColor: "#7289DA",
+  border: "none",
+  color: "white",
+  borderRadius: "8px",
+  cursor: "pointer",
+  fontWeight: 600,
+  fontSize: "1rem",
+}
+
 };
