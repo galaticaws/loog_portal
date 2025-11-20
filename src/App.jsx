@@ -48,6 +48,8 @@ export default function RosterBoard() {
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const [sortOption, setSortOption] = useState("position"); // default sort
   const [filterOwner, setFilterOwner] = useState("All");
+  const [filterContract, setFilterContract] = useState("All");
+
 
   // Fetch rosters
   useEffect(() => {
@@ -115,6 +117,13 @@ export default function RosterBoard() {
     return filtered.map((team) => {
       let players = [...(team.players || [])];
 
+      // Apply contract filter
+      if (filterContract !== "All") {
+        players = players.filter(
+          (p) => String(p.contract_length ?? "N/A") === filterContract
+        );
+}
+
       if (sortOption === "position") {
         const order = ["QB", "RB", "WR", "TE", "K", "DEF"];
         players.sort((a, b) => order.indexOf(a.position) - order.indexOf(b.position));
@@ -124,7 +133,7 @@ export default function RosterBoard() {
 
       return { ...team, players };
     });
-  }, [rosters, sortOption, filterOwner]);
+  }, [rosters, sortOption, filterOwner, filterContract]);
 
   return (
     <>
@@ -191,7 +200,24 @@ export default function RosterBoard() {
               ))}
             </select>
           </label>
+          <label style={styles.label}>
+  Filter by Contract:{" "}
+  <select
+    value={filterContract}
+    onChange={(e) => setFilterContract(e.target.value)}
+    style={styles.select}
+  >
+    <option value="All">All</option>
+    <option value="0">Restricted FAs</option>
+    <option value="1">1 Year</option>
+    <option value="2">2 Years</option>
+    <option value="3">3 Years</option>
+    <option value="4">4 Years</option>
+  </select>
+</label>
         </div>
+
+        <center><p>* Restricted FAs are FAs aquired during the season or players activated from the taxi squad. Teams will have an opportunity to give these players a contract before they become FAs.</p></center>
 
         {/* Rosters */}
 
